@@ -53,8 +53,6 @@ public class GeospatialStreetscapeManager : MonoBehaviour
     [SerializeField]
     private UnityEngine.UI.Toggle terrainsToggle;
 
-    private LineRenderer currentLine;
-
 
     //VideoPlayer Elements
 
@@ -67,8 +65,6 @@ public class GeospatialStreetscapeManager : MonoBehaviour
 
     [SerializeField]
     private UnityEngine.UI.Button materialButton;
-
-    private List<Vector3> linePositions = new List<Vector3>();
 
 
 
@@ -119,10 +115,6 @@ public class GeospatialStreetscapeManager : MonoBehaviour
     private void AddRenderGeometry(ARStreetscapeGeometry geometry)
     {
 
-
-        //Logger.Instance.LogInfo(Convert.ToString(geometry.quality));
-
-
         if (!streetscapeGeometryCached.ContainsKey(geometry.trackableId))
         {
             if ((geometry.streetscapeGeometryType == StreetscapeGeometryType.Building && options.BuildingsOn)
@@ -154,20 +146,13 @@ public class GeospatialStreetscapeManager : MonoBehaviour
     {
         if (streetscapeGeometryCached.ContainsKey(geometry.trackableId))
         {
-            GameObject renderGeometryObject = new GameObject(
-                "StreetscapeGeometryMesh", typeof(MeshFilter), typeof(MeshRenderer));
-
-            renderGeometryObject.GetComponent<MeshFilter>().mesh = geometry.mesh;
+            GameObject renderGeometryObject = streetscapeGeometryCached[geometry.trackableId];
 
             renderGeometryObject.GetComponent<MeshRenderer>().material =
-                   geometry.streetscapeGeometryType == StreetscapeGeometryType.Building ? materialManager.buildingMaterial : materialManager.terrainMaterial;
-
-            renderGeometryObject.AddComponent<MeshCollider>();
+             geometry.streetscapeGeometryType == StreetscapeGeometryType.Building ? materialManager.buildingMaterial : materialManager.terrainMaterial;
 
             renderGeometryObject.transform.position = geometry.pose.position;
             renderGeometryObject.transform.rotation = geometry.pose.rotation;
-
-            streetscapeGeometryCached.Add(geometry.trackableId, renderGeometryObject);
         }
         else
         {
@@ -177,7 +162,6 @@ public class GeospatialStreetscapeManager : MonoBehaviour
     }
 
     private void DestroyRenderGeometry(ARStreetscapeGeometry geometry)
-
     {
 
         if (streetscapeGeometryCached.ContainsKey(geometry.trackableId))
@@ -212,7 +196,74 @@ public class GeospatialStreetscapeManager : MonoBehaviour
 
     }
 
-    private void drawing()
+    public void drawing()
+    {
+
+        // make sure we're touching the screen and pointer is currently not over UI
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+
+        //Check for Touch motion
+        if (Input.GetMouseButton(0) || Input.touchCount > 0)
+            {
+                //Get tap position 
+
+                UnityEngine.Touch touch = Input.GetTouch(0);
+                Vector2 screenTapPosition = touch.position;
+
+                if (raycastManager.RaycastStreetscapeGeometry(screenTapPosition, ref hits))
+                {
+
+                    ARStreetscapeGeometry streetscapegeometry =
+                      streetscapeGeometryManager.GetStreetscapeGeometry(hits[0].trackableId);
+
+                    Logger.Instance.LogInfo(Convert.ToString(streetscapegeometry.streetscapeGeometryType));
+
+                    if (streetscapegeometry != null)
+                    {
+
+                        if (streetscapegeometry.streetscapeGeometryType == StreetscapeGeometryType.Building)
+                        {
+                            var hitPose = hits[0].pose;
+
+                            if (touch.phase == UnityEngine.TouchPhase.Began)
+                            {
+
+                            Logger.Instance.LogInfo("Touchphase Began");
+                            DrawingSystem.Instance.CreateNewLine(hitPose);
+
+                            }
+
+                        else if (touch.phase == UnityEngine.TouchPhase.Moved || touch.phase == UnityEngine.TouchPhase.Stationary)
+                            {
+
+                            Logger.Instance.LogInfo("Touchphase continues");
+                            DrawingSystem.Instance.UpdateLine(hitPose);
+
+                        }
+                        else if (touch.phase == UnityEngine.TouchPhase.Ended)
+                        {
+                            DrawingSystem.Instance.EndLine();
+                        }
+
+                    }
+
+                        if (streetscapegeometry.streetscapeGeometryType == StreetscapeGeometryType.Terrain)
+                        {
+                            var hitPose = hits[0].pose;
+                            Instantiate(objectToSpawn_Terrain, hitPose.position, hitPose.rotation);
+                        }
+
+
+                    }
+                }
+
+
+            }
+
+        }
+    
+
+    private void drawObjects()
     {
 
         // make sure we're touching the screen and pointer is currently not over UI

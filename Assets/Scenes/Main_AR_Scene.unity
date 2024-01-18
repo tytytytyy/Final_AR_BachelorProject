@@ -622,6 +622,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1034947796
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1034947798}
+  - component: {fileID: 1034947797}
+  m_Layer: 0
+  m_Name: DrawingSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1034947797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1034947796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd1e5219e9ae94d4d834a304cbfd6f2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anchorManager: {fileID: 2112977174}
+  lineMaterial: {fileID: 2100000, guid: fd89e5b92ad7f274f87cb0bdc70f27e7, type: 2}
+--- !u!4 &1034947798
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1034947796}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 537.7475, y: 1170, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1137992892 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6573886871530017518, guid: d8c7e321b9b611b41bdc0c48d54d4589,
@@ -714,7 +760,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingMaterial: {fileID: 2100000, guid: 661af0f3b6dcd6f4281259d966396f69, type: 2}
-  terrainMaterial: {fileID: 2100000, guid: 9cc5569d679a7744d942de1c5a6b7f8a, type: 2}
+  terrainMaterial: {fileID: 2100000, guid: 661af0f3b6dcd6f4281259d966396f69, type: 2}
   buildingMaterials:
   - {fileID: 2100000, guid: 661af0f3b6dcd6f4281259d966396f69, type: 2}
   - {fileID: 2100000, guid: 9cc5569d679a7744d942de1c5a6b7f8a, type: 2}
@@ -820,9 +866,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8821824703458715696, guid: 8bbc1537e2086234f9d9febdd7b4019a,
         type: 3}
+      propertyPath: currentLine
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8821824703458715696, guid: 8bbc1537e2086234f9d9febdd7b4019a,
+        type: 3}
       propertyPath: newMaterial
       value: 
       objectReference: {fileID: 2100000, guid: 78d0919ad57160443a9bc1a69c1c1543, type: 2}
+    - target: {fileID: 8821824703458715696, guid: 8bbc1537e2086234f9d9febdd7b4019a,
+        type: 3}
+      propertyPath: anchorManager
+      value: 
+      objectReference: {fileID: 2112977174}
     - target: {fileID: 8821824703458715696, guid: 8bbc1537e2086234f9d9febdd7b4019a,
         type: 3}
       propertyPath: materialButton
@@ -1424,3 +1480,4 @@ SceneRoots:
   - {fileID: 604663375}
   - {fileID: 661478449}
   - {fileID: 1919568519}
+  - {fileID: 1034947798}

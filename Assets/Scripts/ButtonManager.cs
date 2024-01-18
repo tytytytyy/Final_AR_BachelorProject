@@ -101,7 +101,6 @@ public class ButtonManager : MonoBehaviour
 
     {
         Logger.Instance.LogInfo("Material Button Clicked!");
-
         materialManager.materialChange();
     }
 

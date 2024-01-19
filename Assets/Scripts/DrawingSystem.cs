@@ -30,19 +30,8 @@ public class DrawingSystem : MonoBehaviour
 
     public void CreateNewLine(Vector3 position)
     {
-        InitializeLineRenderer(position);
-
-        currentLine.positionCount = positionCount;
-        currentLine.SetPosition(0, position);//0
-        Logger.Instance.LogInfo("Hit point = " + position + " > Line Pos = " + currentLine.GetPosition(0));
         
-        currentLine.SetPosition(1, position);  //1 Set the position at the incremented index
-        Logger.Instance.LogInfo("Hit point = " + position + " > Line Pos = " + currentLine.GetPosition(1));
-
-        positionCount = positionCount + 1;
-        currentLine.positionCount = positionCount;
-
-        Logger.Instance.LogWarning("POSITION COUNT:"+Convert.ToString(positionCount));
+        InitializeLineRenderer(position);
 
     }
 
@@ -50,13 +39,16 @@ public class DrawingSystem : MonoBehaviour
     {
         if (currentLine != null)
         {
-            currentLine.SetPosition(positionCount-1, position);
-            Logger.Instance.LogInfo("CONTINUE Hit point = " + position + " > Line Pos = " + currentLine.GetPosition(1));
-
-            positionCount = positionCount + 1;
+            positionCount++;
             currentLine.positionCount = positionCount;
 
-            currentLine.Simplify(1f);
+            Logger.Instance.LogError("position count "+ positionCount);
+
+            currentLine.SetPosition(positionCount-1, position);
+            Logger.Instance.LogWarning("Position Pointn:"+Convert.ToString(currentLine.positionCount-1)+"CONTINUE Hit point = " + position + " > Line Pos = " + currentLine.GetPosition(positionCount-1));
+
+
+            //currentLine.Simplify(1f);
 
 
         }
@@ -70,7 +62,6 @@ public class DrawingSystem : MonoBehaviour
     public void EndLine()
     {
         //currentLine = null;
-        positionCount = 2;
     }
 
     void InitializeLineRenderer(Vector3 position)
@@ -97,11 +88,22 @@ public class DrawingSystem : MonoBehaviour
 
 
         // Setze die LineRenderer-Einstellungen
-        currentLine.startWidth = 0.5f;
-        currentLine.endWidth = 0.5f;
+        currentLine.startWidth = 0.01f;
+        currentLine.endWidth = 0.01f;
         currentLine.material = lineMaterial;
         currentLine.material.color = Color.red;
-        currentLine.useWorldSpace = false;
+        currentLine.useWorldSpace = true;
+
+        positionCount = 0;
+
+        currentLine.SetPosition(positionCount, position);//0
+        Logger.Instance.LogInfo("Hit point = " + position + " > Line Pos = " + currentLine.GetPosition(0));
+
+        positionCount++;
+
+        currentLine.SetPosition(positionCount, position);  //1 Set the position at the incremented index
+        Logger.Instance.LogInfo("Hit point = " + position + " > Line Pos = " + currentLine.GetPosition(1));
+
 
     }
 

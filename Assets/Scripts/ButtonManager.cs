@@ -7,7 +7,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
-
+/*
+ * Script Name: ButtonManager.cs
+ * Author: Tabea Spaenich
+ * Date: November 28, 2023
+ * Description: Manages the display and control of information popup windows.
+ */
 public class ButtonManager : MonoBehaviour
 {
 

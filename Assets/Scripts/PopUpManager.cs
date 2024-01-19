@@ -4,134 +4,131 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+/*
+ * Script Name: PopUpManager.cs
+ * Author: Tabea Spaenich
+ * Date: November 25, 2023
+ * Description: Manages the display and control of information popup windows.
+ */
+
 public class PopUpManager : MonoBehaviour
 {
+    // Button triggering the display of InfoPopUps.
+    [SerializeField] private Button infoButton;
 
-    [SerializeField]
-    private Button InfoButton;
+    // List of InfoPopUps 
+    [SerializeField] private GameObject[] infoPopUps;
 
-    [SerializeField]
-    public GameObject[] InfoPopUps;
+    // Refernce for the shown inforInfoPopUps
+    private int infoPopUpPageCounter = 0;
 
-    private int InfoPopUpPageCounter = 0;
-
-    [SerializeField]
-    private Button[] NextInfoPopUpPageButton;
-
-
+    // Button triggering the display of the next InfoPopUp
+    [SerializeField] private Button[] nextInfoPopUpPageButton;
 
     // Start is called before the first frame update
     void Start()
     {
-
-        //Deactivate all InfoPopUp windows
-        for (int i = 0; i < InfoPopUps.Length; i++)
+        // Deactivate all InfoPopUp windows at the beginning
+        foreach (var popUp in infoPopUps)
         {
-            InfoPopUps[i].SetActive(false);
-
+            popUp.SetActive(false);
         }
 
-        if (InfoButton == null)
+        // Check if InfoPopUps Button is assigned
+        if (infoButton == null)
         {
             Logger.Instance.LogError("InfoButton component not assigned. Please assign the Button in the Inspector.");
             return;
         }
 
-        InfoButton.onClick.AddListener(InfoButtonClickHandler);
+        // Add InfoButtonClickHandler to the InfoButton
+        infoButton.onClick.AddListener(InfoButtonClickHandler);
 
-        if (NextInfoPopUpPageButton == null)
+        // Check if NextInfoPopUpPageButton is assigned
+        if (nextInfoPopUpPageButton == null)
         {
             Logger.Instance.LogError("NextInfoPopUpPageButton component not assigned. Please assign the Button in the Inspector.");
             return;
         }
 
-        for (int i = 0; i < NextInfoPopUpPageButton.Length; i++)
+        // Add NextInfoPopUpPageButtonClickHandler to all NextInfoPopUpPageButtons
+        foreach (var button in nextInfoPopUpPageButton)
         {
-            NextInfoPopUpPageButton[i].onClick.AddListener(NextInfoPopUpPageButtonClickHandler);
-
+            button.onClick.AddListener(NextInfoPopUpPageButtonClickHandler);
         }
-
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        //Close active PopUp if touch outside of PopUpWindow
         // Check if there is at least one touch
         if (Input.touchCount > 0)
         {
-            // Check if the first touch command has started
-            if (Input.GetTouch(0).phase == TouchPhase.Began)
-            {
-                // Check if the touch point is not over the pop-up object
-                if (!IsTouchOverPopup(Input.GetTouch(0).position) && AreInfoPopUpsOpen())
-
-                {
-                    // Call the method directly when a touch occurs outside the pop-up object
-                    ToogleInfoPopUps();
-                }
-            }
+            TouchOutsideOfPopUp();
         }
     }
 
-    //Button Handlers
-
-    void InfoButtonClickHandler()
+    // Close active Popup if touch is outside of PopupWindow
+    void TouchOutsideOfPopUp()
     {
-
-        ToogleInfoPopUps();
-
+            // Check if the touch point is not over the popup object and if any InfoPopUps are open
+            if (!IsTouchOverPopup(Input.GetTouch(0).position) && AreInfoPopUpsOpen())
+            {
+                // Call the method directly when a touch occurs outside the popup object
+                ToggleInfoPopUps();
+            }
     }
 
+    // InfoButton Handler
+    void InfoButtonClickHandler()
+    {
+        ToggleInfoPopUps();
+    }
+
+    // Show the next InfoPopUp
     void NextInfoPopUpPageButtonClickHandler()
     {
         Logger.Instance.LogInfo("Next Info Page Button Clicked!");
 
-        InfoPopUps[InfoPopUpPageCounter].SetActive(false);
-        InfoPopUpPageCounter++;
-        if (InfoPopUpPageCounter <= InfoPopUps.Length)
-        {
-            InfoPopUps[InfoPopUpPageCounter].SetActive(true);
-        }
+        infoPopUps[infoPopUpPageCounter].SetActive(false);
+        infoPopUpPageCounter++;
 
+
+        if (infoPopUpPageCounter < infoPopUps.Length)
+        {
+            infoPopUps[infoPopUpPageCounter].SetActive(true);
+        }
     }
 
-    //Close or Open Info Pop Up 
-    void ToogleInfoPopUps()
+    // Close or Open InfoPopUp
+    void ToggleInfoPopUps()
     {
-        if (InfoPopUps != null)
+        if (infoPopUps != null)
         {
-            InfoPopUps[InfoPopUpPageCounter].SetActive(!InfoPopUps[InfoPopUpPageCounter].activeSelf);
-            if (InfoPopUps[InfoPopUpPageCounter].activeSelf == false)
+            infoPopUps[infoPopUpPageCounter].SetActive(!infoPopUps[infoPopUpPageCounter].activeSelf);
+            if (!infoPopUps[infoPopUpPageCounter].activeSelf)
             {
-                InfoPopUpPageCounter = 0;
+                infoPopUpPageCounter = 0;
             }
         }
-
     }
 
+    // Return if InfoPopUp is touched
     bool IsTouchOverPopup(Vector2 touchPosition)
     {
-
         return EventSystem.current.IsPointerOverGameObject();
-
     }
 
     // Return if InfoPopUps are open
-    public bool AreInfoPopUpsOpen() { 
-    
-
-        for (int i = 0; i<InfoPopUps.Length; i++)
+    public bool AreInfoPopUpsOpen()
+    {
+        foreach (var popUp in infoPopUps)
         {
-           if(InfoPopUps[i].activeSelf)
+            if (popUp.activeSelf)
             {
                 return true;
             }
-
         }
         return false;
-        
     }
-
 }

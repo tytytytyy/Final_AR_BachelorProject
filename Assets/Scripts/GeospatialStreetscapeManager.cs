@@ -34,6 +34,9 @@ public class GeospatialStreetscapeManager : MonoBehaviour
     public MaterialManager materialManager;
 
     [SerializeField]
+    private DrawingSystem drawingSystem;
+
+    [SerializeField]
     private GameObject objectToSpawn;
 
     [SerializeField]
@@ -65,6 +68,8 @@ public class GeospatialStreetscapeManager : MonoBehaviour
 
     [SerializeField]
     private UnityEngine.UI.Button materialButton;
+
+   
 
 
 
@@ -198,6 +203,16 @@ public class GeospatialStreetscapeManager : MonoBehaviour
 
     public void drawing()
     {
+        UnityEngine.Touch touch = Input.GetTouch(0);
+
+        if (touch.phase == UnityEngine.TouchPhase.Ended)
+        {
+
+            //Logger.Instance.LogInfo("Touchphase ends");
+
+           // drawingSystem.EndLine();
+        }
+
 
         // make sure we're touching the screen and pointer is currently not over UI
         if (EventSystem.current.IsPointerOverGameObject()) return;
@@ -207,7 +222,6 @@ public class GeospatialStreetscapeManager : MonoBehaviour
             {
                 //Get tap position 
 
-                UnityEngine.Touch touch = Input.GetTouch(0);
                 Vector2 screenTapPosition = touch.position;
 
                 if (raycastManager.RaycastStreetscapeGeometry(screenTapPosition, ref hits))
@@ -223,28 +237,27 @@ public class GeospatialStreetscapeManager : MonoBehaviour
 
                         if (streetscapegeometry.streetscapeGeometryType == StreetscapeGeometryType.Building)
                         {
-                            var hitPose = hits[0].pose;
 
                             if (touch.phase == UnityEngine.TouchPhase.Began)
                             {
+                            var hitPose = hits[0].pose;
 
                             Logger.Instance.LogInfo("Touchphase Began");
-                            DrawingSystem.Instance.CreateNewLine(hitPose);
+
+                            drawingSystem.CreateNewLine(hitPose.position);
 
                             }
 
-                        else if (touch.phase == UnityEngine.TouchPhase.Moved || touch.phase == UnityEngine.TouchPhase.Stationary)
+                            else if (touch.phase == UnityEngine.TouchPhase.Moved || touch.phase == UnityEngine.TouchPhase.Stationary)
                             {
 
+                            var hitPose = hits[0].pose;
+
                             Logger.Instance.LogInfo("Touchphase continues");
-                            DrawingSystem.Instance.UpdateLine(hitPose);
+                            drawingSystem.UpdateLine(hitPose.position);
 
                         }
-                        else if (touch.phase == UnityEngine.TouchPhase.Ended)
-                        {
-                            DrawingSystem.Instance.EndLine();
-                        }
-
+                        
                     }
 
                         if (streetscapegeometry.streetscapeGeometryType == StreetscapeGeometryType.Terrain)
@@ -308,5 +321,25 @@ public class GeospatialStreetscapeManager : MonoBehaviour
         }
 
     }
+    private void ExchangeMaterialwithVideo(GameObject gameObject)
+    {
 
+        string videoFileName = "trippy.mp4"; // Update with your video file name
+
+        videoFilePath = Path.Combine(Application.streamingAssetsPath, videoFileName);
+
+        videoPlayer = gameObject.AddComponent<UnityEngine.Video.VideoPlayer>();
+        videoPlayer.url = videoFilePath;
+
+        videoPlayer.isLooping = true;
+        videoPlayer.renderMode = UnityEngine.Video.VideoRenderMode.MaterialOverride;
+        videoPlayer.targetMaterialRenderer = GetComponent<Renderer>();
+        videoPlayer.frame = 0;
+        videoPlayer.targetCameraAlpha = 0.5F;
+        videoPlayer.SetDirectAudioMute(1, true);
+
+        videoPlayer.Play();
+
+    }
 }
+

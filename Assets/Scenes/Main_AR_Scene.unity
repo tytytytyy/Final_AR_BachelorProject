@@ -1588,6 +1588,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3968450142043710337, guid: d8c7e321b9b611b41bdc0c48d54d4589,
+        type: 3}
+      propertyPath: m_Name
+      value: Info PopUps
+      objectReference: {fileID: 0}
     - target: {fileID: 6740397171785176674, guid: d8c7e321b9b611b41bdc0c48d54d4589,
         type: 3}
       propertyPath: safetyNotificationPopUp

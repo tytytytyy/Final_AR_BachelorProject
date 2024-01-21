@@ -16,9 +16,6 @@ using UnityEngine.XR.ARFoundation;
 
 public class DrawingManager : MonoBehaviour
 {
-
-    //public static DrawingManager Instance;
-
     // Reference to the current LineRenderer component
     private LineRenderer currentLine;
 
@@ -41,7 +38,7 @@ public class DrawingManager : MonoBehaviour
     private Vector3 PreviousPosition;
 
     // Minimum distance between objects
-    private float minimumDistanceforObjects = 5f;
+    private float minimumDistanceforObjects = 3f;
 
 
     // Create a new line
@@ -105,7 +102,7 @@ public class DrawingManager : MonoBehaviour
             Logger.Instance.LogWarning("Position Pointn:" + Convert.ToString(currentLine.positionCount - 1) + "CONTINUE Hit point = " + position + " > Line Pos = " + currentLine.GetPosition(positionCount - 1));
 
             // Simplify the line to remove unnecessary vertices
-            currentLine.Simplify(0.001f);
+            currentLine.Simplify(0.002f);
 
         }
         else

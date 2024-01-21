@@ -15,6 +15,14 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
 
+/*
+ * Script Name: GeospatialStreetscapeManager.cs
+ * Author: Tabea Spaenich
+ * Date: December 05, 2023
+ * Description: Manages geospatial streetscape elements in AR space,
+ *              rendering buildings and terrains based on ARStreetscapeGeometry.
+ */
+
 public class StreetscapeMenuOptions
 {
     public bool BuildingsOn { get; set; }
@@ -205,15 +213,6 @@ public class GeospatialStreetscapeManager : MonoBehaviour
     {
         UnityEngine.Touch touch = Input.GetTouch(0);
 
-        if (touch.phase == UnityEngine.TouchPhase.Ended)
-        {
-
-            //Logger.Instance.LogInfo("Touchphase ends");
-
-           // drawingSystem.EndLine();
-        }
-
-
         // make sure we're touching the screen and pointer is currently not over UI
         if (EventSystem.current.IsPointerOverGameObject()) return;
 
@@ -225,7 +224,8 @@ public class GeospatialStreetscapeManager : MonoBehaviour
                 Vector2 screenTapPosition = touch.position;
 
                 if (raycastManager.RaycastStreetscapeGeometry(screenTapPosition, ref hits))
-                {
+                {      
+                
 
                     ARStreetscapeGeometry streetscapegeometry =
                       streetscapeGeometryManager.GetStreetscapeGeometry(hits[0].trackableId);
@@ -242,7 +242,8 @@ public class GeospatialStreetscapeManager : MonoBehaviour
                             {
                             var hitPose = hits[0].pose;
 
-                            Logger.Instance.LogInfo("Touchphase Began");
+                            ARAnchor anchor = streetscapeGeometryManager.AttachAnchor(streetscapegeometry, hitPose);
+
 
                             drawingSystem.CreateNewLine(hitPose.position);
 

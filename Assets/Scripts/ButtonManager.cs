@@ -11,35 +11,40 @@ using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
  * Script Name: ButtonManager.cs
  * Author: Tabea Spaenich
  * Date: November 28, 2023
- * Description: Manages the display and control of information popup windows.
+ * Description: Manages the Buttons and control of information popup windows.
  */
 public class ButtonManager : MonoBehaviour
 {
-
+    // Reference to MaterialButton
     [SerializeField]
     private Button MaterialButton;
 
+    // Reference to CameraButton
     [SerializeField]
     private Button CameraButton;
 
+    // Reference to Blink for Screenshot
     [SerializeField]
     private GameObject blink;
 
+    // Reference to MaterialManager
     [SerializeField]
     public MaterialManager materialManager;
 
+    // Reference to DrawingButton
     [SerializeField]
     public Button drawingButton;
 
+    // DrawingButtonImage when mode off
     [SerializeField]
     public Sprite drawingButtonImage_Off;
 
+    // DrawingButtonImage when mode on
     [SerializeField]
     public Sprite drawingButtonImage_On;
 
 
 
-    // Start is called before the first frame update
     void Start()
     {
         //Add a listener to the Material Button
@@ -51,6 +56,8 @@ public class ButtonManager : MonoBehaviour
 
         MaterialButton.onClick.AddListener(MaterialButtonClickHandler);
 
+
+        //Add a listener to the Camera Button
         CameraButton.onClick.AddListener(CameraButtonClickHandler);
 
         if (CameraButton == null)
@@ -59,6 +66,7 @@ public class ButtonManager : MonoBehaviour
             return;
         }
 
+        //Add a listener to the Drawing Button
         drawingButton.onClick.AddListener(drawingButtonClickHandler);
 
         if (drawingButton == null)
@@ -68,7 +76,7 @@ public class ButtonManager : MonoBehaviour
         }
     }
 
-    // Methods to handle button clicks
+    // Handler for clicks on Buttons
 
     void drawingButtonClickHandler()
     {
@@ -91,26 +99,12 @@ public class ButtonManager : MonoBehaviour
         }
     }
 
-    void BuildingButtonClickHandler()
-    {
-
-    }
-
-
-    void TerrainButtonClickHandler()
-    {
-
-    }
-
     void MaterialButtonClickHandler()
 
     {
         Logger.Instance.LogInfo("Material Button Clicked!");
         materialManager.materialChange();
     }
-
-
-
 
     void CameraButtonClickHandler()
     {
@@ -120,30 +114,9 @@ public class ButtonManager : MonoBehaviour
     }
 
 
-
-
-    // Coroutine to change the image
-    IEnumerator ChangeImageCoroutine()
-    {
-        // Change the image (replace 'myButton.image.overrideSprite' with the appropriate property in your case)
-
-        Logger.Instance.LogInfo("Button changed!");
-
-        // Wait for 2 seconds
-        yield return new WaitForSeconds(2f);
-
-        materialManager.materialChange();
-        Logger.Instance.LogInfo("Start Material Change!");
-
-
-        // Reset the image to its original state (optional)
-        // Replace 'myButton.image.overrideSprite' with the appropriate property in your case
-        MaterialButton.image.overrideSprite = null;
-    }
-
     void CaptureScreenshot()
     {
-        // Deaktiviere vorübergehend UI-Elemente (optional)
+        // Temporarily deactivate UI elements
         Canvas[] canvases = FindObjectsOfType<Canvas>();
 
         foreach (Canvas canvas in canvases)
@@ -151,14 +124,14 @@ public class ButtonManager : MonoBehaviour
             canvas.enabled = false;
         }
 
-        // Erstelle einen Dateinamen basierend auf dem aktuellen Zeitstempel
+        // Create a filename based on the current timestamp
         string screenshotName = "UrbanARt_Screenshot_" + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
 
-        // Erfasse den Screenshot und speichere ihn im Projektordner
+        // Capture the screenshot and save it in the project folder
         ScreenCapture.CaptureScreenshot(screenshotName);
 
-        // Warte einen kurzen Moment (optional)
-        // Damit Unity Zeit hat, den Screenshot zu erfassen, bevor UI-Elemente wieder aktiviert werden
+        // Wait for a short moment
+        // To give Unity time to capture the screenshot before reactivating UI elements
         StartCoroutine(ReactivateUIAfterDelay());
 
         
@@ -167,19 +140,18 @@ public class ButtonManager : MonoBehaviour
             StartCoroutine(BlinkCoroutine());
         }
 
-        // Optional: Debug-Ausgabe
         Logger.Instance.LogInfo("Screenshot aufgenommen: " + screenshotName);
 
     }
 
-
-
+    // Reactivate UI Elements after Delay
     System.Collections.IEnumerator ReactivateUIAfterDelay()
     {
-        // Warte ein paar Frames (oder Zeit) bevor UI-Elemente wieder aktiviert werden
+        // Wait a few frames (or time) before reactivating UI elements
         yield return null;
 
-        // Aktiviere UI-Elemente erneut (optional)
+
+        // Reactivate UI elements
         Canvas[] canvases = FindObjectsOfType<Canvas>();
         foreach (Canvas canvas in canvases)
         {
@@ -187,6 +159,7 @@ public class ButtonManager : MonoBehaviour
         }
     }
 
+    //Blink when take Screenshot
     private IEnumerator BlinkCoroutine()
     {
         blink.SetActive(true);

@@ -8,16 +8,16 @@ using UnityEngine.UIElements;
 using UnityEngine.XR.ARFoundation;
 
 /*
- * Script Name: DrawingSystem.cs
+ * Script Name: DrawingManager.cs
  * Author: Tabea Spaenich
  * Date: December 25, 2023
  * Description: Manages drawing lines in AR space using LineRenderer and ARAnchorManager.
  */
 
-public class DrawingSystem : MonoBehaviour
+public class DrawingManager : MonoBehaviour
 {
 
-    //public static DrawingSystem Instance;
+    //public static DrawingManager Instance;
 
     // Reference to the current LineRenderer component
     private LineRenderer currentLine;
@@ -29,8 +29,23 @@ public class DrawingSystem : MonoBehaviour
     [SerializeField]
     public Material lineMaterial;
 
-    // Method to create a new line
-    public void CreateNewLine(Vector3 position)
+    // Object that can be drawn into the Scene
+    [SerializeField]
+    private GameObject objectToSpawn;
+
+    // Reference to ARAnchorManager
+    [SerializeField]
+    ARAnchorManager arAnchorManager;
+
+    // Reference to Position of the last placed object
+    private Vector3 PreviousPosition;
+
+    // Minimum distance between objects
+    private float minimumDistanceforObjects = 5f;
+
+
+    // Create a new line
+    public void CreateNewLine(Pose hitPose, Vector3 position)
     {
 
         // Create a new GameObject to represent the line
@@ -55,6 +70,7 @@ public class DrawingSystem : MonoBehaviour
             Logger.Instance.LogInfo($"LineRenderer created)");
         }
 
+        arAnchorManager.AddAnchor(hitPose);
 
         // Set LineRenderer properties
         currentLine.startWidth = 0.4f;
@@ -76,7 +92,7 @@ public class DrawingSystem : MonoBehaviour
 
     }
 
-    // Method to update the line with a new position
+    // Update the line with a new position
     public void UpdateLine(Vector3 position)
     {
         if (currentLine != null)
@@ -99,4 +115,23 @@ public class DrawingSystem : MonoBehaviour
         }
     }
 
+    //Draw with an Object 
+    public void DrawWithObjects(Pose hitPose)
+    {
+        // Draw just if the Objects have a minimus distance to each other
+        if (PreviousPosition != null && Mathf.Abs(Vector3.Distance(PreviousPosition, hitPose.position)) >= minimumDistanceforObjects)
+        {
+
+            Logger.Instance.LogInfo("Distance:"+ Convert.ToString(Mathf.Abs(Vector3.Distance(PreviousPosition, hitPose.position))));
+            Instantiate(objectToSpawn, hitPose.position, hitPose.rotation);
+            PreviousPosition = hitPose.position;
+        }
+        else if (PreviousPosition == null)
+        {
+            Instantiate(objectToSpawn, hitPose.position, hitPose.rotation);
+            PreviousPosition = hitPose.position;
+
+        }
+
+    }
 }

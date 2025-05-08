@@ -1,4 +1,4 @@
-# UrbanARt – Augmented Reality für digitale Fassadenkunst
+# UrbanARt: Eine mobile location-based AR App für die Veränderung städtischer Gebäudefassaden mittels 3D-Mapping
 
 ## Motivation & Ziel  
 UrbanARt wurde mit dem Ziel entwickelt, städtische Gebäudefassaden in digitale Kunstflächen zu verwandeln. Mithilfe von Augmented Reality (AR) und 3D-Mapping-Technologien soll eine immersive, interaktive Kunsterfahrung auf mobilen Endgeräten ermöglicht werden.

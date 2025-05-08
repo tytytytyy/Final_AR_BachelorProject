@@ -39,6 +39,3 @@ Dabei wurden funktionale und nicht-funktionale Anforderungen analysiert, prioris
 
 Die App zeigt eindrucksvoll, welches Potenzial AR für digitale Kunst und städtische Kartierung bietet. Besonders hervorzuheben ist die Integration von ARCore für eine realitätsnahe Interaktion mit Gebäudefassaden.  
 Verbesserungspotential besteht bei der Feinabstimmung der Nutzerinteraktion und der technischen Präzision.
-
-> **Fazit**  
-UrbanARt verbindet digitale und reale Räume auf innovative Weise und legt einen soliden Grundstein für zukünftige AR-Kunstanwendungen im urbanen Raum.
